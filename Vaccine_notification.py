@@ -29,7 +29,7 @@ def get_info(center, session):
     
     return info_str
 
-def get_slot(state, district, date):
+def get_slot(state, district, date, channel_name):
     with urllib.request.urlopen("https://cdn-api.co-vin.in/api/v2/admin/location/states") as url:
         data= json.loads(url.read().decode())
         
@@ -53,7 +53,7 @@ def get_slot(state, district, date):
                 sess_cnt += 1
                 center_found = 1
             if center_data['centers'][i]['sessions'][j]['min_age_limit'] == 18 and center_data['centers'][i]['sessions'][j]['available_capacity'] > 0:
-                slack_message(get_info(center_data['centers'][i], center_data['centers'][i]['sessions'][j]), "#vaccine_alert")
+                slack_message(get_info(center_data['centers'][i], center_data['centers'][i]['sessions'][j]), channel_name)
                 found = 1
                 break
         if center_found:
@@ -63,17 +63,24 @@ def get_slot(state, district, date):
         
     return found, sess_cnt, e_centers
 
-state = "Karnataka"
-district = "BBMP"
+parser = argparse.ArgumentParser(description="Enter Arguments for the script (state, district, channel-name)")
+parser.add_argument('--state', type=str, default="", help='State name to search for vaccine slot')
+parser.add_argument('--district', type=str, default="", help='District name belonging to above state to search for vaccine slot')
+parser.add_argument('--channel-name', type=str, default="", help='Slack channel name to receive the notifications from the bot')
+args = parser.parse_args()
+
+state = args.state
+district = args.district
+channel_name = args.channel_name
 
 while True:
     date = datetime.today().strftime('%d-%m-%Y')
-    found, sess_count, e_centers = get_slot(state, district, date)
+    found, sess_count, e_centers = get_slot(state, district, date, channel_name)
     
     #print("No of eligible centers searched: {}\nNo of Sessions searched(total): {}".format(e_centers, sess_count))
     
     if found:
-        slack_message("Slot found. Closing the API calls...", "#vaccine_alert")
+        slack_message("Slot found. Closing the API calls...", channel_name)
         break
     
     random.seed(datetime.now())
