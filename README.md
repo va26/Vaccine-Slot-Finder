@@ -1,7 +1,7 @@
 Vaccine-Slot-Finder
 ===================================
 
-This python script can be used to get a notification for vaccine slot availability on your mobile device. Implemented this as there is acute shortage of vaccine and it is difficult to find slots for 18+ population in India. The script takes `state`, `district` and `channel-name` as inputs and runs indefinitely until it finds a slot. The notification of the slot found is sent to your slack channel which can be also viewed on your smart phone.
+This python script can be used to get a notification for vaccine slot availability on your mobile device. Implemented this as there is acute shortage of vaccine and it is difficult to find slots for **18+ population in India**. The script takes `state`, `district` and `channel-name` as inputs and runs indefinitely until it finds a slot. The notification of the slot found is sent to your slack channel which can be also viewed on your smart phone.
 
 # Getting Started
 
